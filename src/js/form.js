@@ -20,9 +20,9 @@ const handleSerchPictures = async event => {
 
   const searchValue = event.currentTarget.elements['searchQuery'].value.trim();
   newFetchApi.text = searchValue;
-  newFetchApi.page = 1;
 
   try {
+    newFetchApi.page = 1;
     const { data } = await newFetchApi.fetchPictures(searchValue);
 
     if (!data.hits.length) {
