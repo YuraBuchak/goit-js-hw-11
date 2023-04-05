@@ -45,9 +45,8 @@ const handleSerchPictures = async event => {
 };
 
 const handleSerchMoreP = async () => {
-  newFetchApi.page += 1;
-
   try {
+    newFetchApi.page += 1;
     const { data } = await newFetchApi.fetchPictures();
 
     listEl.insertAdjacentHTML('beforeend', renderMarkUp(data.hits));
