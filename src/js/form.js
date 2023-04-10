@@ -19,11 +19,16 @@ const handleSerchPictures = async event => {
   event.preventDefault();
 
   const searchValue = event.currentTarget.elements['searchQuery'].value.trim();
+  if (!searchValue) {
+    Notiflix.Notify.failure('Write something...');
+    return;
+  }
   newFetchApi.text = searchValue;
 
   try {
     newFetchApi.page = 1;
     const { data } = await newFetchApi.fetchPictures(searchValue);
+    const howMachpages = data.totalHits / 40;
 
     if (!data.hits.length) {
       throw new Error(
@@ -33,10 +38,20 @@ const handleSerchPictures = async event => {
       );
     }
 
+    if (howMachpages <= newFetchApi.page) {
+      listEl.innerHTML = renderMarkUp(data.hits);
+      Notiflix.Notify.info(
+        `Hooray! We found ${data.totalHits} images. Unfortunately, that’s all =)`
+      );
+      lightbox.refresh();
+
+      return;
+    }
+
     listEl.innerHTML = renderMarkUp(data.hits);
-    btnLoadMore.classList.remove('is-hidden');
     Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
     lightbox.refresh();
+    btnLoadMore.classList.remove('is-hidden');
   } catch (error) {
     console.log(error);
     btnLoadMore.classList.add('is-hidden');
